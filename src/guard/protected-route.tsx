@@ -11,13 +11,17 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = (props: ProtectedRouteProps) => {
   const { children, canSee, redirectTo } = props;
-  const user = tokenService.decode();
+  try {
+    const user = tokenService.decode();
 
-  if (!user || canSee.filter((i) => i !== user.userType).length == 0) {
+    if (!user || canSee.filter((i) => i !== user.userType).length == 0) {
+      return <Navigate to={redirectTo} replace />;
+    }
+
+    return children;
+  } catch (e) {
     return <Navigate to={redirectTo} replace />;
   }
-
-  return children;
 };
 
 export default ProtectedRoute;

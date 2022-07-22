@@ -21,8 +21,12 @@ function removeToken() {
 }
 
 function decode() {
-  const token = getToken()
-  const decoded = jwt_decode<TokenPayload>(token)
+  try {
+    const token = getToken()
+    const decoded = jwt_decode<TokenPayload>(token)
 
-  return decoded
+    return decoded
+  } catch (e) {
+    return null
+  }
 }
