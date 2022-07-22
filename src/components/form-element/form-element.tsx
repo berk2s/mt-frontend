@@ -7,7 +7,7 @@ interface FormElementProps {
   children: any;
   showHelp?: boolean;
   showHelpClassName?: string;
-  helpText?: string | string[];
+  helpText?: string | string[] | any;
 }
 
 const FormElement = (props: FormElementProps) => {

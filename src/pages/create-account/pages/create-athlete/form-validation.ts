@@ -38,8 +38,9 @@ const RegisterFormSchema = Yup.object().shape({
 
       return true
     })
-
     .test('fileSize', 'The file is too large', (value) => {
+      if (!value) return true
+
       return value != undefined && value && value.size <= 2000000
     })
     .required('Profile photo is required'),

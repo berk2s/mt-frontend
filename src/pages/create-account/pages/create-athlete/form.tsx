@@ -4,61 +4,12 @@ import RegisterFormSchema from "./form-validation";
 import FormElement from "../../../../components/form-element/form-element";
 import MultiSelect from "../../../../components/multi-select/multi-select";
 import Button from "react-bootstrap/Button";
-import { createAccount } from "../../../../services/create-account/create-account.services";
 import { AppContext } from "../../../../App";
-import convertError from "../../../../utility/error-utility";
-import { CreateAthleteRequest } from "../../../../services/create-account/create-account.types";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import BootstrapForm from "react-bootstrap/Form";
-import { tokenService } from "../../../../services/token-service/token.services";
-import { userService } from "../../../../services/user/user.services";
-
-const languageOptions = [
-  {
-    key: "EN",
-    label: "English",
-  },
-  {
-    key: "TR",
-    label: "Turkish",
-  },
-  {
-    key: "DE",
-    label: "Germany",
-  },
-];
-
-const trainingDaysOptions = [
-  {
-    key: "SUNDAY",
-    label: "Sunday",
-  },
-  {
-    key: "MONDAY",
-    label: "Monday",
-  },
-  {
-    key: "TUESDAY",
-    label: "Tuesday",
-  },
-  {
-    key: "WEDNESDAY",
-    label: "Wednesday",
-  },
-  {
-    key: "THURSDAY",
-    label: "Thursday",
-  },
-  {
-    key: "FRIDAY",
-    label: "Friday",
-  },
-  {
-    key: "SATURDAY",
-    label: "Saturyda",
-  },
-];
+import onSubmit from "./form-submit";
+import { languageOptions, trainingDaysOptions } from "./constants";
 
 interface RegisterFormValues {
   fullName: string;
@@ -97,92 +48,7 @@ const RegisterForm = () => {
     <Formik
       initialValues={initialValues}
       validationSchema={RegisterFormSchema}
-      onSubmit={async (values, actions) => {
-        actions.setSubmitting(false);
-
-        const birthday = new Date(
-          parseInt(values.birthdayYear),
-          parseInt(values.birthdayMonth) - 1,
-          parseInt(values.birthdayDay)
-        );
-
-        try {
-          const createAthleteReq: CreateAthleteRequest = {
-            fullName: values.fullName,
-            email: values.email,
-            password: values.password,
-            birthday: birthday,
-            gender: values.gender,
-            trainingDays: values.trainingDays,
-            trainingExperience: values.trainingExperience,
-            languages: values.languages,
-          };
-          const tokenResponse = await createAccount.createAthlete(
-            createAthleteReq
-          );
-
-          tokenService.saveToken(tokenResponse.accessToken);
-          const { userId } = tokenService.decode();
-
-          const userResponse = await userService.updateProfileImage({
-            userId,
-            profileImage: values.profileImage,
-          });
-
-          console.log(userResponse);
-
-          if (
-            tokenResponse &&
-            tokenResponse.accessToken &&
-            tokenResponse.expiresIn
-          ) {
-            setToastSettings({
-              text: "Yes! Welcome to Train Together.",
-              show: true,
-              className: "bg-success",
-            });
-          }
-        } catch (err) {
-          if (
-            err.response.data &&
-            err.response.data &&
-            err.response.data.details
-          ) {
-            setToastSettings({
-              text: "Some fields aren't valid",
-              show: true,
-              className: "bg-warning",
-            });
-
-            if (err.response.data.details.length > 0) {
-              const values = Object.values(err.response.data.details);
-
-              values.forEach((value) => {
-                const errorPoint = Object.values(value)[0];
-                const splitted = errorPoint.split(".");
-                actions.setErrors({
-                  [splitted[0]]: convertError(splitted[0], splitted[1]),
-                });
-              });
-            } else {
-              const { error_description } = err.response.data;
-              const splitted = error_description.split(".");
-              actions.setErrors({
-                [splitted[0]]: convertError(splitted[0], splitted[1]),
-              });
-            }
-
-            return;
-          } else {
-          }
-
-          setToastSettings({
-            text: "Unknown error has occured",
-            show: true,
-            className: "bg-warning",
-          });
-        }
-      }}
+      onSubmit={onSubmit(setToastSettings)}
     >
       {({ errors, touched, setFieldValue, isValid, submitForm }) => (
         <Row>
@@ -226,7 +92,7 @@ const RegisterForm = () => {
           <Col lg={8}>
             <Form>
               <FormElement
-                showHelp={errors.fullName && touched.fullName}
+                showHelp={!!(errors.fullName && touched.fullName)}
                 showHelpClassName={"invalid-feedback"}
                 helpText={errors.fullName}
                 className="mb-3"
@@ -243,7 +109,7 @@ const RegisterForm = () => {
               <div className="row">
                 <div className="col-2">
                   <FormElement
-                    showHelp={errors.birthdayDay && touched.birthdayDay}
+                    showHelp={!!(errors.birthdayDay && touched.birthdayDay)}
                     showHelpClassName={"invalid-feedback"}
                     helpText={errors.birthdayDay}
                     className="mb-3"
@@ -259,7 +125,7 @@ const RegisterForm = () => {
                 </div>
                 <div className="col-2">
                   <FormElement
-                    showHelp={errors.birthdayMonth && touched.birthdayMonth}
+                    showHelp={!!(errors.birthdayMonth && touched.birthdayMonth)}
                     showHelpClassName={"invalid-feedback"}
                     helpText={errors.birthdayMonth}
                     className="mb-3"
@@ -276,7 +142,7 @@ const RegisterForm = () => {
 
                 <div className="col-2">
                   <FormElement
-                    showHelp={errors.birthdayYear && touched.birthdayYear}
+                    showHelp={!!(errors.birthdayYear && touched.birthdayYear)}
                     showHelpClassName={"invalid-feedback"}
                     helpText={errors.birthdayYear}
                     className="mb-3"
@@ -293,7 +159,7 @@ const RegisterForm = () => {
               </div>
 
               <FormElement
-                showHelp={errors.email && touched.email}
+                showHelp={!!(errors.email && touched.email)}
                 showHelpClassName={"invalid-feedback"}
                 helpText={errors.email}
                 className="mb-3"
@@ -308,7 +174,7 @@ const RegisterForm = () => {
               </FormElement>
 
               <FormElement
-                showHelp={errors.password && touched.password}
+                showHelp={!!(errors.password && touched.password)}
                 showHelpClassName={"invalid-feedback"}
                 helpText={errors.password}
                 className="mb-3"
@@ -324,7 +190,7 @@ const RegisterForm = () => {
               </FormElement>
 
               <FormElement
-                showHelp={errors.gender && touched.gender}
+                showHelp={!!(errors.gender && touched.gender)}
                 showHelpClassName={"invalid-feedback"}
                 helpText={errors.gender}
                 className="mb-3"
@@ -378,7 +244,7 @@ const RegisterForm = () => {
 
               <FormElement
                 showHelp={
-                  errors.trainingExperience && touched.trainingExperience
+                  !!(errors.trainingExperience && touched.trainingExperience)
                 }
                 showHelpClassName={"invalid-feedback"}
                 helpText={errors.trainingExperience}
