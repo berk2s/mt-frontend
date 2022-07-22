@@ -45,6 +45,10 @@ function App() {
               <Link to="/create-account" className="nav-link">
                 Create Account
               </Link>
+
+              <Link to="/sign-in" className="nav-link">
+                Sign In
+              </Link>
             </Nav>
           </Container>
         </Navbar>
