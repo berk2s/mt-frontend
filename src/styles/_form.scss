@@ -1,0 +1,33 @@
+.form-title {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-style: italic;
+    letter-spacing: -0.8px;
+}
+
+.form-label {
+    color: #1b2430;
+    font-weight: 500;
+}
+
+.custom-input {
+    background-color: #f6f6f6;
+    border: 1px solid rgba(41, 52, 98, 0.2);
+    color: #003865;
+    height: 55px;
+    &:focus {
+        background-color: #f6f6f6;
+        border: 1px solid rgba(41, 52, 98, 1);
+    }
+}
+
+.custom-select {
+    background-color: #f6f6f6;
+    border: 1px solid rgba(41, 52, 98, 0.2);
+    color: #003865;
+    height: 55px;
+    &:focus {
+        background-color: #f6f6f6;
+        border: 1px solid rgba(41, 52, 98, 1);
+    }
+}
