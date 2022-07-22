@@ -1,9 +1,5 @@
-import jwt_decode, { JwtPayload } from 'jwt-decode'
-
-interface TokenPayload extends JwtPayload {
-  userId: string
-  fullName: string
-}
+import jwt_decode from 'jwt-decode'
+import { TokenPayload } from '../types'
 
 export const tokenService = {
   saveToken,

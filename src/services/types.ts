@@ -1,3 +1,5 @@
+import { JwtPayload } from 'jwt-decode'
+
 export interface TokenResponse {
   accessToken: string
   expiresIn: number
@@ -13,4 +15,10 @@ export interface UserResponse {
   workoutDays?: string[]
   experience?: string
   imageUrl?: string
+}
+
+export interface TokenPayload extends JwtPayload {
+  userId: string
+  fullName: string
+  userType: 'ATHLETE' | 'PT' | 'NORMAL_USER'
 }
