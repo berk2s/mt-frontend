@@ -67,7 +67,7 @@ const SignInForm = () => {
               className="w-100"
               disabled={!isValid}
             >
-              <span className="text-white">Sign Up</span>
+              <span className="text-white">Sign In</span>
             </Button>
           </div>
         </Form>
