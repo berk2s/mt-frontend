@@ -37,8 +37,6 @@ const onSubmit = (setToastSettings: any) => async (
       profileImage: values.profileImage,
     })
 
-    console.log(userResponse)
-
     if (tokenResponse && tokenResponse.accessToken && tokenResponse.expiresIn) {
       setToastSettings({
         text: 'Yes! Welcome to Train Together.',

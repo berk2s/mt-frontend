@@ -77,7 +77,6 @@ const RegisterForm = () => {
               type="file"
               className="profile-img-input"
               onChange={(event) => {
-                console.log(event.target.files);
                 if (event.target.files && event.target.files[0]) {
                   let img = event.target.files[0];
                   setFieldValue("profileImage", img);
