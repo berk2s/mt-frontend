@@ -1,7 +1,7 @@
 import { userService } from '../../services/user/user.services'
 import generateError from '../../utility/api-utility'
 
-const onSubmit = (setToastSettings: any) => async (
+const onSubmit = (setToastSettings: any, setUserGym: any) => async (
   values: any,
   actions: any,
 ) => {
@@ -16,6 +16,7 @@ const onSubmit = (setToastSettings: any) => async (
         show: true,
         className: 'bg-success',
       })
+      setUserGym(updateGym.gym)
     }
   } catch (err) {
     console.log(err)

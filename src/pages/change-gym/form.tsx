@@ -21,6 +21,8 @@ interface GymSelectInput {
 
 const ChangeGymForm = () => {
   const [gyms, setGyms] = useState<GymSelectInput[]>([]);
+  const [userGym, setUserGym] = useState<string>(null);
+  const [isFetchingDone, setIsFetchingDone] = useState<boolean>(false);
   const [initialValues, setInitialValues] = useState<ChangeGymForm>({
     selectedGym: "",
   });
@@ -35,7 +37,9 @@ const ChangeGymForm = () => {
       setInitialValues({
         selectedGym: userInfo.gym,
       });
+      setUserGym(userInfo.gym);
     }
+    setIsFetchingDone(true);
 
     setGyms([
       ...gyms.map((i) => {
@@ -52,11 +56,13 @@ const ChangeGymForm = () => {
       initialValues={initialValues}
       validationSchema={ChangeGymFormSchema}
       enableReinitialize={true}
-      onSubmit={onSubmit(setToastSettings)}
+      onSubmit={onSubmit(setToastSettings, setUserGym)}
     >
-      {({ errors, touched, isValid, submitForm }) => (
+      {({ errors, touched, isValid, submitForm, values }) => (
         <Form>
-          <Alert variant="alert-warn">You didn't select a gym yet.</Alert>
+          {!userGym && isFetchingDone && (
+            <Alert variant="alert-warn">You didn't select a gym yet.</Alert>
+          )}
           <FormElement
             showHelp={!!(errors.selectedGym && touched.selectedGym)}
             showHelpClassName={"invalid-feedback"}
