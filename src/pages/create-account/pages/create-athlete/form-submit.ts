@@ -1,10 +1,10 @@
 import { createAccount } from '../../../../services/create-account/create-account.services'
-import { CreateAthleteRequest } from '../../../../services/create-account/create-account.types'
 import { tokenService } from '../../../../services/token-service/token.services'
+import { CreateAthleteRequest } from '../../../../services/types'
 import { userService } from '../../../../services/user/user.services'
 import convertError from '../../../../utility/error-utility'
 
-const onSubmit = (setToastSettings: any) => async (
+const onSubmit = (setToastSettings: any, updateUser: any) => async (
   values: any,
   actions: any,
 ) => {
@@ -29,11 +29,9 @@ const onSubmit = (setToastSettings: any) => async (
     }
     const tokenResponse = await createAccount.createAthlete(createAthleteReq)
 
-    tokenService.saveToken(tokenResponse.accessToken)
-    const { userId } = tokenService.decode()
+    await tokenService.saveToken(tokenResponse.accessToken)
 
     const userResponse = await userService.updateProfileImage({
-      userId,
       profileImage: values.profileImage,
     })
 
@@ -43,6 +41,7 @@ const onSubmit = (setToastSettings: any) => async (
         show: true,
         className: 'bg-success',
       })
+      updateUser()
     }
   } catch (err) {
     if (err.response.data && err.response.data && err.response.data.details) {
@@ -71,9 +70,7 @@ const onSubmit = (setToastSettings: any) => async (
       }
 
       return
-    } else {
     }
-
     setToastSettings({
       text: 'Unknown error has occured',
       show: true,

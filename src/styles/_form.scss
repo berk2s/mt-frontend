@@ -10,24 +10,39 @@
     font-weight: 500;
 }
 
+.form-control {
+    border: unset;
+    transition: 0.2s;
+}
+
+.custom-select {
+    border: unset;
+    transition: 0.2s;
+}
+
 .custom-input {
     background-color: #f6f6f6;
-    border: 1px solid rgba(41, 52, 98, 0.2);
+    border-bottom: 1px solid rgba(41, 52, 98, 0.2);
     color: #003865;
     height: 55px;
     &:focus {
         background-color: #f6f6f6;
-        border: 1px solid rgba(41, 52, 98, 1);
+        border-bottom: 1px solid rgba(41, 52, 98, 1);
     }
 }
 
 .custom-select {
     background-color: #f6f6f6;
-    border: 1px solid rgba(41, 52, 98, 0.2);
+    border-bottom: 1px solid rgba(41, 52, 98, 0.2);
     color: #003865;
     height: 55px;
     &:focus {
         background-color: #f6f6f6;
-        border: 1px solid rgba(41, 52, 98, 1);
+        border-bottom: 1px solid rgba(41, 52, 98, 1);
     }
+}
+
+.highlightOption {
+    color: "white";
+    background-color: "#003865";
 }

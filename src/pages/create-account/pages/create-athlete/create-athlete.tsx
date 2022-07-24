@@ -1,8 +1,5 @@
 import React from "react";
 import Stack from "react-bootstrap/Stack";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import BootstrapForm from "react-bootstrap/Form";
 import RegisterForm from "./form";
 import "./create-athlete.scss";
 

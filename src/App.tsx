@@ -3,8 +3,6 @@ import { Routes, Route, Link } from "react-router-dom";
 import CreateAccount from "./pages/create-account/create-account.component";
 import Home from "./pages/home/home.component";
 import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
 import CreateAthleteAccount from "./pages/create-account/pages/create-athlete/create-athlete";
 import Toast from "react-bootstrap/Toast";
 import { ToastContainer } from "react-bootstrap";
@@ -12,6 +10,12 @@ import SignIn from "./pages/sign-in/sign-in";
 import ProtectedRoute from "./guard/protected-route";
 import Discover from "./pages/discover/discover";
 import GuestRoute from "./guard/guest-route";
+import Header from "./components/header/header.component";
+import { tokenService } from "./services/token-service/token.services";
+import { TokenPayload } from "./services/types";
+import EditProfile from "./pages/edit-profile/pages/athlete/edit-profile";
+import Logout from "./pages/logout/logout";
+import { userService } from "./services/user/user.services";
 
 export const AppContext = createContext(null);
 
@@ -21,6 +25,8 @@ function App() {
     className: "",
     text: "",
   });
+
+  const [user, setUser] = useState<TokenPayload>(null);
 
   useEffect(() => {
     if (toastSettings.show) {
@@ -34,28 +40,34 @@ function App() {
     }
   }, [toastSettings.show]);
 
+  useEffect(() => {
+    const decoded = tokenService.decode();
+
+    if (decoded) {
+      setUser(decoded);
+    }
+  }, []);
+
+  const updateUser = (obj?: TokenPayload) => {
+    if (obj) {
+      setUser({
+        ...user,
+        ...obj,
+      });
+      return;
+    }
+
+    const decoded = tokenService.decode();
+
+    setUser(decoded);
+  };
+
   return (
-    <AppContext.Provider value={{ setToastSettings }}>
+    <AppContext.Provider
+      value={{ setToastSettings, user, setUser, updateUser }}
+    >
       <div className="App">
-        <Navbar className="navbar">
-          <Container>
-            <Navbar.Brand className="brand-name">
-              <Link to="/" className="nav-link">
-                Train(Together
-              </Link>
-            </Navbar.Brand>
-
-            <Nav className="justify-content-end">
-              <Link to="/create-account" className="nav-link">
-                Create Account
-              </Link>
-
-              <Link to="/sign-in" className="nav-link">
-                Sign In
-              </Link>
-            </Nav>
-          </Container>
-        </Navbar>
+        <Header />
         <Container>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -94,6 +106,29 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="profile"
+              element={
+                <ProtectedRoute
+                  canSee={["PT", "ATHLETE"]}
+                  redirectTo="/sign-in"
+                >
+                  <EditProfile />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="logout"
+              element={
+                <ProtectedRoute
+                  canSee={["PT", "ATHLETE"]}
+                  redirectTo="/sign-in"
+                >
+                  <Logout />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </Container>
 
@@ -102,7 +137,7 @@ function App() {
             show={toastSettings.show}
             className={`d-inline-block m-1 ${toastSettings.className}`}
           >
-            <Toast.Body>{toastSettings.text}</Toast.Body>
+            <Toast.Body className="toast-text">{toastSettings.text}</Toast.Body>
           </Toast>
         </ToastContainer>
       </div>
