@@ -16,6 +16,7 @@ import { TokenPayload } from "./services/types";
 import EditProfile from "./pages/edit-profile/pages/athlete/edit-profile";
 import Logout from "./pages/logout/logout";
 import { userService } from "./services/user/user.services";
+import ChangeGym from "./pages/change-gym/change-gym";
 
 export const AppContext = createContext(null);
 
@@ -109,11 +110,17 @@ function App() {
             <Route
               path="profile"
               element={
-                <ProtectedRoute
-                  canSee={["PT", "ATHLETE"]}
-                  redirectTo="/sign-in"
-                >
+                <ProtectedRoute canSee={["ATHLETE"]} redirectTo="/sign-in">
                   <EditProfile />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="change-gym"
+              element={
+                <ProtectedRoute canSee={["ATHLETE"]} redirectTo="/sign-in">
+                  <ChangeGym />
                 </ProtectedRoute>
               }
             />

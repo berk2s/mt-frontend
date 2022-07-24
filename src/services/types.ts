@@ -15,6 +15,7 @@ export interface UserResponse {
   workoutDays?: string[]
   experience?: string
   imageUrl?: string
+  gym?: string
 }
 
 export interface TokenPayload extends JwtPayload {
@@ -53,4 +54,9 @@ export interface UpdateUserRequest {
 export interface UpdateAthleteRequest extends UpdateUserRequest {
   trainingDays: string[]
   trainingExperience: string
+}
+
+export interface GymResponse {
+  id?: string
+  name?: string
 }

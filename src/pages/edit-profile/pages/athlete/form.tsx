@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import EditProfileFormSchema from "./validation";
 import Button from "react-bootstrap/Button";
@@ -17,7 +17,7 @@ import useRestCallEffect from "../../../../hooks/useRestCallEffect";
 import { userService } from "../../../../services/user/user.services";
 import apiConfig from "../../../../config/api.config";
 
-interface RegisterFormValues {
+interface EditProfileForm {
   fullName: string;
   email: string;
   birthdayDay: string;
@@ -35,7 +35,7 @@ const EditProfileForm = () => {
   const [imagePreview, setImagePreview] = useState("");
   const { setToastSettings, updateUser } = useContext(AppContext);
 
-  const [initialValues, setInitialValues] = useState<RegisterFormValues>({
+  const [initialValues, setInitialValues] = useState<EditProfileForm>({
     fullName: "",
     email: "",
     birthdayDay: "",

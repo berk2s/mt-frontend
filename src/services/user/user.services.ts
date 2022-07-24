@@ -7,6 +7,8 @@ export const userService = {
   updateProfileImage,
   getLoggedAthlete,
   updateAthleteProfile,
+  updateGymPreference,
+  getUserInfo,
 }
 
 async function updateProfileImage(
@@ -33,6 +35,12 @@ async function getLoggedAthlete(): Promise<AthleteResponse> {
   return Promise.resolve(athlete)
 }
 
+async function getUserInfo(): Promise<UserResponse> {
+  const userInfo: UserResponse = await clientJSON.get('/users/me')
+
+  return Promise.resolve(userInfo)
+}
+
 async function updateAthleteProfile(req: UpdateAthleteRequest) {
   const athlete: AthleteResponse = await clientJSON.put(
     '/users/athletes',
@@ -40,4 +48,10 @@ async function updateAthleteProfile(req: UpdateAthleteRequest) {
   )
 
   return Promise.resolve(athlete)
+}
+
+async function updateGymPreference(gymId: string): Promise<UserResponse> {
+  const updateGym: UserResponse = await clientJSON.put(`/users/gyms/${gymId}`)
+
+  return Promise.resolve(updateGym)
 }

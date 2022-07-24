@@ -14,7 +14,7 @@ const ProtectedRoute = (props: ProtectedRouteProps) => {
   try {
     const user = tokenService.decode();
 
-    if (!user || canSee.filter((i) => i !== user.userType).length == 0) {
+    if (!user || canSee.filter((i) => i === user.userType).length == 0) {
       return <Navigate to={redirectTo} replace />;
     }
 
