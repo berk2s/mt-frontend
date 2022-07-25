@@ -33,12 +33,10 @@ const ChatMessages = (props: ChatMessagesProps) => {
   useRestCallEffect(
     () => {
       const listener = async () => {
-        console.log(chatId);
         socket.emit("join", { chatId: chatId });
 
         socket.on("chat", (data) => {
           if (data.chat.chatId === chatId) {
-            console.log("IM RENDERED FOR", data.chat);
             setTimeout(() => {
               setChatMessages(data.chat.messages);
             }, 1000);
