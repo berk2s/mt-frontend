@@ -1,23 +1,25 @@
 import React, { useContext, useRef, useState } from "react";
 import { Formik, Form, Field } from "formik";
-import RegisterFormSchema from "./form-validation";
-import FormElement from "../../../../components/form-element/form-element";
-import MultiSelect from "../../../../components/multi-select/multi-select";
+import EditProfileFormSchema from "./validation";
 import Button from "react-bootstrap/Button";
-import { AppContext } from "../../../../App";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import BootstrapForm from "react-bootstrap/Form";
-import onSubmit from "./form-submit";
+import onSubmit from "./submit";
+import { AppContext } from "../../../../App";
+import FormElement from "../../../../components/form-element/form-element";
+import MultiSelect from "../../../../components/multi-select/multi-select";
 import {
   languageOptions,
   trainingDaysOptions,
 } from "../../../../constants/constants";
+import useRestCallEffect from "../../../../hooks/useRestCallEffect";
+import { userService } from "../../../../services/user/user.services";
+import apiConfig from "../../../../config/api.config";
 
-interface RegisterFormValues {
+interface EditProfileForm {
   fullName: string;
   email: string;
-  password: string;
   birthdayDay: string;
   birthdayMonth: string;
   birthdayYear: string;
@@ -28,15 +30,14 @@ interface RegisterFormValues {
   profileImage: any;
 }
 
-const RegisterForm = () => {
+const EditProfileForm = () => {
   const fileInputRef = useRef(null);
   const [imagePreview, setImagePreview] = useState("");
   const { setToastSettings, updateUser } = useContext(AppContext);
 
-  const initialValues: RegisterFormValues = {
+  const [initialValues, setInitialValues] = useState<EditProfileForm>({
     fullName: "",
     email: "",
-    password: "",
     birthdayDay: "",
     birthdayMonth: "",
     birthdayYear: "",
@@ -45,12 +46,37 @@ const RegisterForm = () => {
     trainingExperience: "BEGINNER",
     languages: [],
     profileImage: "",
-  };
+  });
+
+  useRestCallEffect(async () => {
+    const athlete = await userService.getLoggedAthlete();
+
+    const birthday = new Date(athlete.birthday ? athlete.birthday : null);
+
+    setInitialValues({
+      fullName: athlete.fullName ? athlete.fullName : "",
+      email: athlete.email ? athlete.email : "",
+      birthdayDay: birthday.getDate().toString(),
+      birthdayMonth: (birthday.getMonth() + 1).toString(),
+      birthdayYear: birthday.getFullYear().toString(),
+      gender: athlete.gender ? athlete.gender : "",
+      trainingDays: athlete.trainingDays ? athlete.trainingDays : [],
+      trainingExperience: athlete.trainingExperience
+        ? athlete.trainingExperience
+        : "",
+      languages: athlete.languages ? athlete.languages : [],
+      profileImage: null,
+    });
+
+    if (athlete.imageUrl)
+      setImagePreview(`${apiConfig.imageUrl}/${athlete.imageUrl}`);
+  }, []);
 
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={RegisterFormSchema}
+      enableReinitialize={true}
+      validationSchema={EditProfileFormSchema}
       onSubmit={onSubmit(setToastSettings, updateUser)}
     >
       {({ errors, touched, setFieldValue, isValid, submitForm }) => (
@@ -64,7 +90,7 @@ const RegisterForm = () => {
                 fileInputRef.current.click();
               }}
             >
-              {!errors.profileImage && imagePreview.trim() !== "" && (
+              {imagePreview.trim() !== "" && (
                 <img src={imagePreview} className="photo-preview" />
               )}
             </div>
@@ -176,22 +202,6 @@ const RegisterForm = () => {
               </FormElement>
 
               <FormElement
-                showHelp={!!(errors.password && touched.password)}
-                showHelpClassName={"invalid-feedback"}
-                helpText={errors.password}
-                className="mb-3"
-                label="Password"
-              >
-                <Field
-                  type="password"
-                  id="password"
-                  name="password"
-                  className="form-control custom-input"
-                  placeholder="Password"
-                />
-              </FormElement>
-
-              <FormElement
                 showHelp={!!(errors.gender && touched.gender)}
                 showHelpClassName={"invalid-feedback"}
                 helpText={errors.gender}
@@ -220,6 +230,9 @@ const RegisterForm = () => {
                 <Field as="div" name="languages">
                   <MultiSelect
                     options={languageOptions}
+                    selectedValues={languageOptions.filter((i) =>
+                      initialValues.languages.includes(i.id)
+                    )}
                     onChange={(el) => {
                       setFieldValue(
                         "languages",
@@ -241,6 +254,9 @@ const RegisterForm = () => {
                 <Field as="div" name="trainingDays">
                   <MultiSelect
                     options={trainingDaysOptions}
+                    selectedValues={trainingDaysOptions.filter((i) =>
+                      initialValues.trainingDays.includes(i.id)
+                    )}
                     onChange={(el) => {
                       setFieldValue(
                         "trainingDays",
@@ -282,7 +298,7 @@ const RegisterForm = () => {
                   className="w-100"
                   disabled={!isValid}
                 >
-                  <span className="text-white">Sign Up</span>
+                  <span className="text-white">Save</span>
                 </Button>
               </div>
             </Form>
@@ -293,4 +309,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default EditProfileForm;

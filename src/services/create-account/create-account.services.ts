@@ -1,6 +1,5 @@
 import { clientJSON } from '..//axios.services'
-import { TokenResponse } from '../types'
-import { CreateAthleteRequest } from './create-account.types'
+import { CreateAthleteRequest, TokenResponse } from '../types'
 
 export const createAccount = {
   createAthlete,
@@ -10,7 +9,7 @@ async function createAthlete(
   body: CreateAthleteRequest,
 ): Promise<TokenResponse> {
   const createAthlhete: TokenResponse = await clientJSON.post(
-    '/user/athlete',
+    '/users/athletes',
     JSON.stringify(body),
   )
 

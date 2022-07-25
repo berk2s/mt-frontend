@@ -1,7 +1,7 @@
 import { loginService } from '../../services/login/login.services'
 import { tokenService } from '../../services/token-service/token.services'
 
-const onSubmit = (setToastSettings: any) => async (
+const onSubmit = (setToastSettings: any, updateUser: any) => async (
   values: any,
   actions: any,
 ) => {
@@ -22,6 +22,7 @@ const onSubmit = (setToastSettings: any) => async (
       show: true,
       className: 'bg-success',
     })
+    updateUser()
   } catch (err) {
     if (err.response.data) {
       setToastSettings({

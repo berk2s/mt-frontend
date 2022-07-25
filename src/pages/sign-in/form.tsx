@@ -12,7 +12,7 @@ interface LoginFormValues {
 }
 
 const SignInForm = () => {
-  const { setToastSettings } = useContext(AppContext);
+  const { setToastSettings, updateUser } = useContext(AppContext);
 
   const initialValues: LoginFormValues = {
     email: "",
@@ -23,7 +23,7 @@ const SignInForm = () => {
     <Formik
       initialValues={initialValues}
       validationSchema={LoginFormSchema}
-      onSubmit={onSubmit(setToastSettings)}
+      onSubmit={onSubmit(setToastSettings, updateUser)}
     >
       {({ errors, touched, submitForm, isValid }) => (
         <Form>
@@ -67,7 +67,7 @@ const SignInForm = () => {
               className="w-100"
               disabled={!isValid}
             >
-              <span className="text-white">Sign Up</span>
+              <span className="text-white">Sign In</span>
             </Button>
           </div>
         </Form>
