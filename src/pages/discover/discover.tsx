@@ -21,8 +21,6 @@ const Discover = () => {
 
     setCurrUser(athleteToMetaData(athletes[0]));
     setNextUser(athleteToMetaData(athletes[1]));
-
-    console.log(athletes);
   }, []);
 
   const discoverAtheletes = async () => {

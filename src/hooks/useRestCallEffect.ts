@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-const useRestCallEffect = (func: any, dep: any) => {
+const useRestCallEffect = (func: any, dep: any, unmounth?: any) => {
   const isFirst = useRef(false)
 
   useEffect(() => {
@@ -10,6 +10,10 @@ const useRestCallEffect = (func: any, dep: any) => {
     }
 
     func()
+
+    return () => {
+      unmounth && unmounth()
+    }
   }, dep)
 }
 

@@ -52,6 +52,12 @@ const Header = () => {
           </span>
 
           <span className="dropdown-item">
+            <Link to="/chat" className="nav-link dropdown-link">
+              Chat
+            </Link>
+          </span>
+
+          <span className="dropdown-item">
             <Link to="/change-gym" className="nav-link dropdown-link">
               Change GYM
             </Link>
