@@ -17,6 +17,7 @@ import EditProfile from "./pages/edit-profile/pages/athlete/edit-profile";
 import Logout from "./pages/logout/logout";
 import { userService } from "./services/user/user.services";
 import ChangeGym from "./pages/change-gym/change-gym";
+import ChatList from "./pages/chat/chat-list";
 
 export const AppContext = createContext(null);
 
@@ -40,6 +41,10 @@ function App() {
       }, 5000);
     }
   }, [toastSettings.show]);
+
+  useEffect(() => {
+    updateUser();
+  }, []);
 
   useEffect(() => {
     const decoded = tokenService.decode();
@@ -121,6 +126,18 @@ function App() {
               element={
                 <ProtectedRoute canSee={["ATHLETE"]} redirectTo="/sign-in">
                   <ChangeGym />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="chat"
+              element={
+                <ProtectedRoute
+                  canSee={["ATHLETE", "PT"]}
+                  redirectTo="/sign-in"
+                >
+                  <ChatList />
                 </ProtectedRoute>
               }
             />

@@ -67,3 +67,51 @@ export interface UserMeta {
   age: string
   level: string
 }
+
+export interface ChatPerson {
+  id: string
+  fullName: string
+  avatar: string
+  subText: string
+  chatId: string
+  matchingId: string
+}
+
+export interface MyChatsResponse {
+  chatId?: any
+  matchingId?: string
+  participants?:
+    | {
+        _id: any
+        fullName: string
+        imageUrl: string
+      }[]
+    | any
+  status?: string
+  createdAt?: Date
+}
+
+export interface MessageResponse {
+  id: any
+  senderId: string
+  chatId: string
+  content: string
+  createdAt: any
+}
+
+export interface UIMessage extends MessageResponse {
+  isTemp?: boolean
+}
+
+export interface SendMessageRequest {
+  content: string
+}
+
+export interface MatchingResponse {
+  id: string
+  interactedUserId: string
+  interactingUserId: string
+  status: string
+  chatId: string
+  createdAt: string
+}
