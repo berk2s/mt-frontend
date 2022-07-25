@@ -12,8 +12,8 @@ export interface UserResponse {
   birthday?: Date
   gender?: string
   languages?: string[]
-  workoutDays?: string[]
-  experience?: string
+  trainingDays?: string[]
+  trainingExperience?: string
   imageUrl?: string
   gym?: string
 }
@@ -59,4 +59,11 @@ export interface UpdateAthleteRequest extends UpdateUserRequest {
 export interface GymResponse {
   id?: string
   name?: string
+}
+
+export interface UserMeta {
+  imageUrl: string
+  name: string
+  age: string
+  level: string
 }

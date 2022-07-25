@@ -1,68 +1,56 @@
 import React, { useEffect, useState } from "react";
 import Stack from "react-bootstrap/Stack";
+import DiscoverCard from "../../components/discover-card/discover-card.component";
 import DislikeIcon from "../../components/icons/dislike.component";
 import LikeIcon from "../../components/icons/like.component";
+import apiConfig from "../../config/api.config";
+import useRestCallEffect from "../../hooks/useRestCallEffect";
+import { discoveryService } from "../../services/discovery/discovery.service";
+import { UserMeta, UserResponse } from "../../services/types";
+import { calculateAge } from "../../utility/date-utility";
+import { capitalizeFirstLetter } from "../../utility/string-utility";
 import "./discover.scss";
 
-interface UserMeta {
-  imageUrl: string;
-  name: string;
-  age: string;
-  level: string;
-}
-
 const Discover = () => {
-  const [currUser, setCurrUser] = useState<UserMeta>({
-    imageUrl: "https://i.pravatar.cc/330",
-    name: "Berek Negerek",
-    age: "23",
-    level: "Intermediate",
-  });
+  const [currUser, setCurrUser] = useState<UserMeta>(null);
+  const [nextUser, setNextUser] = useState<UserMeta>(null);
+  const [isFetching, setIsFetching] = useState(false);
 
-  useEffect(() => {
-    if (!currUser) {
-      setCurrUser({
-        imageUrl: "https://i.pravatar.cc/350",
-        name: "John Doe",
-        age: "28",
-        level: "Beginner",
-      });
-    }
+  useRestCallEffect(async () => {
+    const athletes = await discoverAtheletes();
+
+    setCurrUser(athleteToMetaData(athletes[0]));
+    setNextUser(athleteToMetaData(athletes[1]));
+
+    console.log(athletes);
   }, []);
 
-  const renderSwipeContent = (userMeta: UserMeta) => {
-    const { name, imageUrl, age, level } = userMeta;
-    const img = userMeta.imageUrl;
-    return (
-      <div className="person-card mx-auto">
-        <img src={img} className="person-img" />
+  const discoverAtheletes = async () => {
+    setIsFetching(true);
+    const athletes = await discoveryService.discovery();
 
-        <div className="person-meta">
-          <span className="person-name">
-            {userMeta.name} • {userMeta.age}
-          </span>
-          <span className="person-level">{userMeta.level}</span>
-        </div>
-      </div>
-    );
+    setTimeout(async () => {
+      setIsFetching(false);
+    }, 2000);
+
+    return athletes;
   };
 
   const dislikeHandle = () => {
-    setCurrUser({
-      imageUrl: "https://i.pravatar.cc/350",
-      name: "John Doxe",
-      age: "28",
-      level: "Beginner",
-    });
+    setCurrUser(nextUser);
   };
 
   const likeHandle = () => {
-    setCurrUser({
-      imageUrl: "https://i.pravatar.cc/350",
-      name: "John2 Doe",
-      age: "28",
-      level: "Beginner",
-    });
+    setCurrUser(nextUser);
+  };
+
+  const athleteToMetaData = (athlete: UserResponse) => {
+    return {
+      imageUrl: `${apiConfig.imageUrl}/${athlete.imageUrl}`,
+      name: athlete.fullName,
+      age: calculateAge(new Date(athlete.birthday)).toString(),
+      level: capitalizeFirstLetter(athlete.trainingExperience),
+    };
   };
 
   return (
@@ -71,7 +59,7 @@ const Discover = () => {
         <h4 className="form-title text-center">Discover buddies</h4>
       </div>
       <div className="col-md-5 mx-auto">
-        {renderSwipeContent(currUser)}
+        <DiscoverCard userMeta={currUser} loading={isFetching} />
 
         <Stack className="action-area mx-auto mt-4">
           <div className="action-btn-wrapper" onClick={dislikeHandle}>

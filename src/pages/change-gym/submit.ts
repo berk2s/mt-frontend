@@ -19,7 +19,6 @@ const onSubmit = (setToastSettings: any, setUserGym: any) => async (
       setUserGym(updateGym.gym)
     }
   } catch (err) {
-    console.log(err)
     if (err.response.data && err.response.data && err.response.data.details) {
       generateError(err, actions, setToastSettings)
       return
