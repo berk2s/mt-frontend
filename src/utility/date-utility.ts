@@ -13,3 +13,13 @@ export const datePrettier = (date: Date) => {
 
   return `${da} ${mo} ${ye}`
 }
+
+export const ageToBirthday = (age: number) => {
+  const now = new Date()
+  now.setMonth(1)
+  now.setDate(1)
+
+  const birthday = new Date(now.setFullYear(new Date().getFullYear() - age))
+
+  return birthday.getFullYear() + '-12-31'
+}

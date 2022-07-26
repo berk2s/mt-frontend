@@ -9,10 +9,15 @@ import apiConfig from "../../config/api.config";
 import useRestCallEffect from "../../hooks/useRestCallEffect";
 import { discoveryService } from "../../services/discovery/discovery.service";
 import { interactionService } from "../../services/interaction/interaction.service";
-import { AthleteResponse, UserMeta, UserResponse } from "../../services/types";
-import { calculateAge } from "../../utility/date-utility";
+import {
+  AthleteResponse,
+  DiscoveryQueryParams,
+  UserMeta,
+} from "../../services/types";
+import { ageToBirthday, calculateAge } from "../../utility/date-utility";
 import { capitalizeFirstLetter } from "../../utility/string-utility";
 import "./discover.scss";
+import FilterDiscover from "./filter-dicover";
 
 type InteractionStatus = "NORMAL" | "LIKED" | "DISLIKED" | "MATCHED";
 
@@ -24,7 +29,7 @@ const Discover = () => {
   const [currUser, setCurrUser] = useState<UserMeta>(null);
   const [athletes, setAthletes] = useState<AthleteResponse[]>([]);
 
-  const [currIndex, setCurrIndex] = useState(null);
+  const [currIndex, setCurrIndex] = useState(0);
 
   const [currInteractionStatus, setInteractionStatus] =
     useState<InteractionStatus>("NORMAL");
@@ -43,21 +48,38 @@ const Discover = () => {
       return;
     }
 
-    setCurrIndex(0);
-  }, [athletes]);
-
-  useEffect(() => {
-    if (currIndex == null) return;
-
     setCurrUser(athleteToMetaData(athletes[currIndex]));
     setInteractionStatus("NORMAL");
     setInteracted(false);
-  }, [currIndex]);
+  }, [athletes]);
 
-  const discoverAtheletes = async () => {
+  const discoverAtheletes = async (_queryParams?: DiscoveryQueryParams) => {
     setIsFetching(true);
 
-    const athletesResponse = await discoveryService.discovery();
+    let queryParams;
+    let birthDayStart;
+    let birthDayEnd;
+
+    if (!_queryParams) {
+      birthDayStart = ageToBirthday(18);
+      birthDayEnd = ageToBirthday(50);
+      queryParams = `birthDate>${birthDayEnd}&birthDate<${birthDayStart}`;
+    } else {
+      queryParams = await generateParams({
+        ..._queryParams,
+        birthdayStart: null,
+        birthdayEnd: null,
+      });
+
+      birthDayStart = ageToBirthday(parseInt(_queryParams.birthdayStart));
+      birthDayEnd = ageToBirthday(parseInt(_queryParams.birthdayEnd));
+
+      queryParams = `birthDate>${birthDayEnd}&birthDate<${birthDayStart}${queryParams}`;
+    }
+
+    console.log(queryParams);
+
+    const athletesResponse = await discoveryService.discovery(queryParams);
 
     setTimeout(async () => {
       setIsFetching(false);
@@ -65,6 +87,25 @@ const Discover = () => {
     }, 2000);
 
     return athletes;
+  };
+
+  const generateParams = async (
+    _queryParams: DiscoveryQueryParams
+  ): Promise<string> => {
+    let query = "";
+    for (const [key, value] of Object.entries(_queryParams)) {
+      if (!value) continue;
+
+      if (Array.isArray(value) && value.length == 0) continue;
+
+      if (!Array.isArray(value)) {
+        query = query.concat("&", `${key}=${value}`);
+      } else {
+        query = query.concat("&", `${key}=${value.join(",")}`);
+      }
+    }
+
+    return Promise.resolve(query);
   };
 
   const likeHandle = async () => {
@@ -144,47 +185,69 @@ const Discover = () => {
     };
   };
 
+  const onFilter = async (values: any, actions: any) => {
+    const queryParams = {
+      location: values.location,
+      birthdayStart: values.age[0],
+      birthdayEnd: values.age[1],
+      gym: values.gyms,
+      sex: values.genders,
+      languages: values.languages,
+      trainingDays: values.workoutDays,
+      trainingExperience: values.experiences,
+    };
+
+    await discoverAtheletes(queryParams);
+  };
+
   return (
-    <Stack className="col-lg-8 pt-5 mx-auto page-wrapper">
+    <Stack className="col-lg-12 pt-5 mx-auto ">
       <div className="mb-5 mx-auto">
         <h4 className="form-title text-center">Discover buddies</h4>
       </div>
-      <div className="col-md-5 mx-auto">
-        <div className="discover-card-area">
-          <DiscoverCard
-            userMeta={currUser}
-            loading={isFetching}
-            interactionFetching={isInteractionFetching}
-            interactionStatus={currInteractionStatus}
-          />
+
+      <div className="row">
+        <div className="col-md-3">
+          <FilterDiscover onSubmit={onFilter} />
         </div>
 
-        {currInteractionStatus === "MATCHED" && (
-          <div className="mx-auto">
-            <div className="matching-action-area">
-              <div
-                className="matched-btn negative-btn"
-                onClick={contiuneDiscovery}
-              >
-                <span>Continue</span>
-              </div>
-              <div className="matched-btn" onClick={() => navigate("/chat")}>
-                <span>Start chatting</span>
-              </div>
-            </div>
+        <div className="col-md-6">
+          <div className="discover-card-area">
+            <DiscoverCard
+              userMeta={currUser}
+              loading={isFetching}
+              interactionFetching={isInteractionFetching}
+              interactionStatus={currInteractionStatus}
+            />
           </div>
-        )}
 
-        {currInteractionStatus !== "MATCHED" && (
-          <Stack className="discover-action-area mx-auto mt-4">
-            <div className="action-btn-wrapper" onClick={dislikeHandle}>
-              <DislikeIcon color={"#F94C66"} width={16} height={16} />
+          {currInteractionStatus === "MATCHED" && (
+            <div className="mx-auto">
+              <div className="matching-action-area">
+                <div
+                  className="matched-btn negative-btn"
+                  onClick={contiuneDiscovery}
+                >
+                  <span>Continue</span>
+                </div>
+                <div className="matched-btn" onClick={() => navigate("/chat")}>
+                  <span>Start chatting</span>
+                </div>
+              </div>
             </div>
-            <div className="action-btn-wrapper" onClick={likeHandle}>
-              <LikeIcon color={"#3CCF4E"} width={16} height={16} />
-            </div>
-          </Stack>
-        )}
+          )}
+
+          {currInteractionStatus !== "MATCHED" && (
+            <Stack className="discover-action-area mx-auto mt-4">
+              <div className="action-btn-wrapper" onClick={dislikeHandle}>
+                <DislikeIcon color={"#F94C66"} width={16} height={16} />
+              </div>
+              <div className="action-btn-wrapper" onClick={likeHandle}>
+                <LikeIcon color={"#3CCF4E"} width={16} height={16} />
+              </div>
+            </Stack>
+          )}
+        </div>
       </div>
     </Stack>
   );

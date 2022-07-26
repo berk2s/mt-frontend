@@ -127,3 +127,14 @@ export interface InteractionResponse {
   createdAt: Date
   matching?: any
 }
+
+export interface DiscoveryQueryParams {
+  location: string
+  birthdayStart?: string
+  birthdayEnd?: string
+  gym?: string[]
+  sex?: string[]
+  languages?: string[]
+  trainingDays?: string[]
+  trainingExperience?: string[]
+}
