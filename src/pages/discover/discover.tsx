@@ -48,10 +48,12 @@ const Discover = () => {
       return;
     }
 
-    setCurrUser(athleteToMetaData(athletes[currIndex]));
+    if (athletes[currIndex])
+      setCurrUser(athleteToMetaData(athletes[currIndex]));
+
     setInteractionStatus("NORMAL");
     setInteracted(false);
-  }, [athletes]);
+  }, [athletes, currIndex]);
 
   const discoverAtheletes = async (_queryParams?: DiscoveryQueryParams) => {
     setIsFetching(true);
@@ -76,8 +78,6 @@ const Discover = () => {
 
       queryParams = `birthDate>${birthDayEnd}&birthDate<${birthDayStart}${queryParams}`;
     }
-
-    console.log(queryParams);
 
     const athletesResponse = await discoveryService.discovery(queryParams);
 

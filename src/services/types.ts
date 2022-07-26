@@ -138,3 +138,27 @@ export interface DiscoveryQueryParams {
   trainingDays?: string[]
   trainingExperience?: string[]
 }
+
+export interface PackageResponse {
+  id: string
+  packageName: string
+  packageDescription: string
+  period: string
+  price: number
+  currency: number
+  packageType: string
+  foreginRef: string
+}
+
+export interface PremiumPackageResponse extends PackageResponse {
+  likeLimit: number
+  canSeePersonalTrainers: boolean
+}
+
+export interface PaymentLinkRequest {
+  foreginRef: string
+}
+
+export interface PaymentLinkResponse {
+  sessionUrl: string
+}

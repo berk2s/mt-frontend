@@ -18,6 +18,8 @@ import Logout from "./pages/logout/logout";
 import { userService } from "./services/user/user.services";
 import ChangeGym from "./pages/change-gym/change-gym";
 import ChatList from "./pages/chat/chat-list";
+import PremiumPackages from "./pages/premium-packages/premium";
+import SubscriptionSuccess from "./pages/success/subscription-success";
 
 export const AppContext = createContext(null);
 
@@ -138,6 +140,27 @@ function App() {
                   redirectTo="/sign-in"
                 >
                   <ChatList />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="go-premium"
+              element={
+                <ProtectedRoute
+                  canSee={["ATHLETE", "PT"]}
+                  redirectTo="/sign-in"
+                >
+                  <PremiumPackages />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="subscription"
+              element={
+                <ProtectedRoute canSee={["ATHLETE"]} redirectTo="/sign-in">
+                  <SubscriptionSuccess />
                 </ProtectedRoute>
               }
             />
