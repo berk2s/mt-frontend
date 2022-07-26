@@ -1,15 +1,15 @@
 const languageOptions = [
   {
-    id: 'EN',
+    id: 'ENGLISH',
     name: 'English',
   },
   {
-    id: 'TR',
+    id: 'TURKISH',
     name: 'Turkish',
   },
   {
-    id: 'DE',
-    name: 'Germany',
+    id: 'GERMAN',
+    name: 'German',
   },
 ]
 

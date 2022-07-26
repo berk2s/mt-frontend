@@ -62,10 +62,13 @@ export interface GymResponse {
 }
 
 export interface UserMeta {
+  id: string
   imageUrl: string
   name: string
   age: string
   level: string
+  languages: string[]
+  trainingDays: string[]
 }
 
 export interface ChatPerson {
@@ -114,4 +117,48 @@ export interface MatchingResponse {
   status: string
   chatId: string
   createdAt: string
+}
+
+export interface InteractionResponse {
+  id?: any
+  userId: string
+  toUserId: string
+  interactionType: 'LIKED' | 'DISLIKED'
+  createdAt: Date
+  matching?: any
+}
+
+export interface DiscoveryQueryParams {
+  location: string
+  birthdayStart?: string
+  birthdayEnd?: string
+  gym?: string[]
+  sex?: string[]
+  languages?: string[]
+  trainingDays?: string[]
+  trainingExperience?: string[]
+}
+
+export interface PackageResponse {
+  id: string
+  packageName: string
+  packageDescription: string
+  period: string
+  price: number
+  currency: number
+  packageType: string
+  foreginRef: string
+}
+
+export interface PremiumPackageResponse extends PackageResponse {
+  likeLimit: number
+  canSeePersonalTrainers: boolean
+}
+
+export interface PaymentLinkRequest {
+  foreginRef: string
+}
+
+export interface PaymentLinkResponse {
+  sessionUrl: string
 }

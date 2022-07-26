@@ -38,6 +38,7 @@ function MultiSelect(props: MultiSelectProps) {
             borderBottom: "1px solid rgba(41, 52, 98, 0.2)",
             borderRadius: "0.375rem",
             height: 55,
+            overflowX: "scroll",
             display: "flex",
             alignItems: "center",
             paddingLeft: 12,

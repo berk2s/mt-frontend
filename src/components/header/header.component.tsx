@@ -64,7 +64,7 @@ const Header = () => {
           </span>
 
           <span className="dropdown-item">
-            <Link to="/change-gym" className="nav-link dropdown-link">
+            <Link to="/go-premium" className="nav-link dropdown-link">
               Go Premium
             </Link>
           </span>
