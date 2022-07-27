@@ -165,3 +165,8 @@ export interface PaymentLinkRequest {
 export interface PaymentLinkResponse {
   sessionUrl: string
 }
+
+export interface UpdateGeoLocationRequest {
+  lat: number
+  lng: number
+}

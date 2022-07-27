@@ -31,6 +31,8 @@ function App() {
   });
 
   const [user, setUser] = useState<TokenPayload>(null);
+  const [lat, setLat] = useState(null);
+  const [lng, setLng] = useState(null);
 
   useEffect(() => {
     if (toastSettings.show) {
@@ -46,7 +48,45 @@ function App() {
 
   useEffect(() => {
     updateUser();
+
+    getLocation();
   }, []);
+
+  useEffect(() => {
+    if (!lat || !lng) return;
+
+    const updateLoc = async () => {
+      await userService.updateLocation({
+        lat: lat,
+        lng: lng,
+      });
+    };
+
+    updateLoc();
+  }, [lat, lng]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    getLocation();
+  }, [user]);
+
+  const getLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser");
+    } else {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLat(position.coords.latitude);
+          setLng(position.coords.longitude);
+        },
+        () => {
+          console.log("Unable to get the location");
+          getLocation();
+        }
+      );
+    }
+  };
 
   useEffect(() => {
     const decoded = tokenService.decode();
@@ -72,7 +112,7 @@ function App() {
 
   return (
     <AppContext.Provider
-      value={{ setToastSettings, user, setUser, updateUser }}
+      value={{ setToastSettings, user, setUser, updateUser, lng, lat }}
     >
       <div className="App">
         <Header />

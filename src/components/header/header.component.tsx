@@ -45,7 +45,9 @@ const Header = () => {
         </Link>
 
         <NavDropdown
-          title={`${user.fullName} ${user.isPremium === true && "(Premium)"}`}
+          title={`${user.fullName} ${
+            user.isPremium === true ? "(Premium)" : ""
+          }`}
           id="basic-nav-dropdown"
         >
           <span className="dropdown-item">

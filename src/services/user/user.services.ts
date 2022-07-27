@@ -1,6 +1,11 @@
 import { clientJSON, clientMultipart } from '../axios.services'
 import { tokenService } from '../token-service/token.services'
-import { AthleteResponse, UpdateAthleteRequest, UserResponse } from '../types'
+import {
+  AthleteResponse,
+  UpdateAthleteRequest,
+  UpdateGeoLocationRequest,
+  UserResponse,
+} from '../types'
 import { UpdateProfileImage } from './user-services.types'
 
 export const userService = {
@@ -9,6 +14,7 @@ export const userService = {
   updateAthleteProfile,
   updateGymPreference,
   getUserInfo,
+  updateLocation,
 }
 
 async function updateProfileImage(
@@ -54,4 +60,15 @@ async function updateGymPreference(gymId: string): Promise<UserResponse> {
   const updateGym: UserResponse = await clientJSON.put(`/users/gyms/${gymId}`)
 
   return Promise.resolve(updateGym)
+}
+
+async function updateLocation(
+  req: UpdateGeoLocationRequest,
+): Promise<AthleteResponse> {
+  const updateLocationRes: AthleteResponse = await clientJSON.put(
+    `/users/athletes/geolocation`,
+    JSON.stringify(req),
+  )
+
+  return Promise.resolve(updateLocationRes)
 }
