@@ -37,6 +37,7 @@ const Discover = () => {
   const [isInteractionFetching, setIsInteractionFetching] = useState(false);
 
   const [interacted, setInteracted] = useState(false);
+  const [reachedLimit, setReachedLimit] = useState(false);
 
   useRestCallEffect(async () => {
     await discoverAtheletes();
@@ -79,12 +80,25 @@ const Discover = () => {
       queryParams = `birthDate>${birthDayEnd}&birthDate<${birthDayStart}${queryParams}`;
     }
 
-    const athletesResponse = await discoveryService.discovery(queryParams);
+    try {
+      const athletesResponse = await discoveryService.discovery(queryParams);
+      setTimeout(async () => {
+        setIsFetching(false);
+        setAthletes(athletesResponse);
+      }, 2000);
+    } catch (err) {
+      if (
+        err.response.data &&
+        err.response.data.error_description &&
+        err.response.data.error_description === "interaction.insufficientLimit"
+      ) {
+        reachedLimitErr();
+        setIsFetching(false);
+        setAthletes([]);
 
-    setTimeout(async () => {
-      setIsFetching(false);
-      setAthletes(athletesResponse);
-    }, 2000);
+        return;
+      }
+    }
 
     return athletes;
   };
@@ -138,11 +152,7 @@ const Discover = () => {
         err.response.data.error_description &&
         err.response.data.error_description === "interaction.insufficientLimit"
       ) {
-        setToastSettings({
-          text: "You reached your like/dislike limit",
-          show: true,
-          className: "bg-warning",
-        });
+        reachedLimitErr();
         return;
       }
 
@@ -179,11 +189,7 @@ const Discover = () => {
         err.response.data.error_description &&
         err.response.data.error_description === "interaction.insufficientLimit"
       ) {
-        setToastSettings({
-          text: "You reached your like/dislike limit",
-          show: true,
-          className: "bg-warning",
-        });
+        reachedLimitErr();
         return;
       }
 
@@ -193,6 +199,15 @@ const Discover = () => {
         className: "bg-warning",
       });
     }
+  };
+
+  const reachedLimitErr = () => {
+    setReachedLimit(true);
+    setToastSettings({
+      text: "You reached your like/dislike limit",
+      show: true,
+      className: "bg-warning",
+    });
   };
 
   const contiuneDiscovery = async () => {
@@ -248,6 +263,7 @@ const Discover = () => {
               loading={isFetching}
               interactionFetching={isInteractionFetching}
               interactionStatus={currInteractionStatus}
+              reachedLimit={reachedLimit}
             />
           </div>
 

@@ -10,11 +10,18 @@ interface DiscoverCardProps {
   loading: boolean;
   interactionStatus: "NORMAL" | "LIKED" | "DISLIKED" | "MATCHED";
   interactionFetching: boolean;
+  reachedLimit: boolean;
 }
 
 const DiscoverCard = (props: DiscoverCardProps) => {
   const [showDetails, setShowDetails] = useState(false);
-  const { userMeta, loading, interactionStatus, interactionFetching } = props;
+  const {
+    userMeta,
+    loading,
+    interactionStatus,
+    interactionFetching,
+    reachedLimit,
+  } = props;
 
   const renderMetaArray = (arr: string[], adj?: string): string => {
     const capitalized = arr.map((i) => capitalizeFirstLetter(i));
@@ -105,7 +112,9 @@ const DiscoverCard = (props: DiscoverCardProps) => {
                 <NotFoundIcon color="#ef5b0c" width={80} height={80} />
 
                 <span className="not-found-text">
-                  Unfortunately, we couldn't find athletes by your criterias
+                  {!reachedLimit &&
+                    "Unfortunately, we couldn't find athletes by your criterias"}
+                  {reachedLimit && "You reached your discovery limit"}
                 </span>
               </div>
             </>
