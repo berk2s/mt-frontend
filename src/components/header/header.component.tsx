@@ -44,7 +44,10 @@ const Header = () => {
           Personal Trainers
         </Link>
 
-        <NavDropdown title={user.fullName} id="basic-nav-dropdown">
+        <NavDropdown
+          title={`${user.fullName} ${user.isPremium === true && "(Premium)"}`}
+          id="basic-nav-dropdown"
+        >
           <span className="dropdown-item">
             <Link to="/profile" className="nav-link dropdown-link">
               Profile
@@ -62,12 +65,14 @@ const Header = () => {
               Change GYM
             </Link>
           </span>
+          {user.isPremium === false && (
+            <span className="dropdown-item">
+              <Link to="/go-premium" className="nav-link dropdown-link">
+                Go Premium
+              </Link>
+            </span>
+          )}
 
-          <span className="dropdown-item">
-            <Link to="/go-premium" className="nav-link dropdown-link">
-              Go Premium
-            </Link>
-          </span>
           <NavDropdown.Divider />
 
           <span className="dropdown-item">

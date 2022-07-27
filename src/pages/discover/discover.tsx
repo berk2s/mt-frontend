@@ -131,6 +131,21 @@ const Discover = () => {
 
       setInteractionStatus("LIKED");
     } catch (err) {
+      setIsInteractionFetching(false);
+
+      if (
+        err.response.data &&
+        err.response.data.error_description &&
+        err.response.data.error_description === "interaction.insufficientLimit"
+      ) {
+        setToastSettings({
+          text: "You reached your like/dislike limit",
+          show: true,
+          className: "bg-warning",
+        });
+        return;
+      }
+
       setToastSettings({
         text: "Unknown error has occured",
         show: true,
@@ -157,6 +172,21 @@ const Discover = () => {
 
       setInteractionStatus("DISLIKED");
     } catch (err) {
+      setIsInteractionFetching(false);
+
+      if (
+        err.response.data &&
+        err.response.data.error_description &&
+        err.response.data.error_description === "interaction.insufficientLimit"
+      ) {
+        setToastSettings({
+          text: "You reached your like/dislike limit",
+          show: true,
+          className: "bg-warning",
+        });
+        return;
+      }
+
       setToastSettings({
         text: "Unknown error has occured",
         show: true,

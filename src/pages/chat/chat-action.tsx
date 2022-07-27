@@ -37,8 +37,18 @@ const ChatAction = ({ matchingId, participantName }) => {
 
   return (
     <>
-      <div className="action-area" onClick={() => setShow(!show)}>
-        <span>UNMATCH</span>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+        }}
+      >
+        <div className="action-area mr-1" onClick={() => setShow(!show)}>
+          <span>UNMATCH</span>
+        </div>
+        <div className="action-area" onClick={() => setShow(!show)}>
+          <span>REPORT</span>
+        </div>
       </div>
 
       <Modal show={show} onHide={() => setShow(false)} keyboard={false}>

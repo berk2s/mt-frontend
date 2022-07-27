@@ -27,6 +27,9 @@ export interface TokenPayload extends JwtPayload {
 export interface AthleteResponse extends UserResponse {
   trainingExperience?: string
   trainingDays?: string[]
+  remainingLike?: number
+  canSeePersonalTrainers?: boolean
+  isPremium?: boolean
 }
 
 export interface CreateBaseUser {
