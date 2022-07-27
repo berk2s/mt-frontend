@@ -44,6 +44,8 @@ export interface CreateBaseUser {
 export interface CreateAthleteRequest extends CreateBaseUser {
   trainingDays: string[]
   trainingExperience: string
+  lat?: number
+  lng?: number
 }
 
 export interface UpdateUserRequest {
@@ -132,7 +134,7 @@ export interface InteractionResponse {
 }
 
 export interface DiscoveryQueryParams {
-  location: string
+  distance: string
   birthdayStart?: string
   birthdayEnd?: string
   gym?: string[]

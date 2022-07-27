@@ -31,7 +31,7 @@ interface RegisterFormValues {
 const RegisterForm = () => {
   const fileInputRef = useRef(null);
   const [imagePreview, setImagePreview] = useState("");
-  const { setToastSettings, updateUser } = useContext(AppContext);
+  const { setToastSettings, updateUser, lat, lng } = useContext(AppContext);
 
   const initialValues: RegisterFormValues = {
     fullName: "",
@@ -51,7 +51,7 @@ const RegisterForm = () => {
     <Formik
       initialValues={initialValues}
       validationSchema={RegisterFormSchema}
-      onSubmit={onSubmit(setToastSettings, updateUser)}
+      onSubmit={onSubmit(lat, lng, setToastSettings, updateUser)}
     >
       {({ errors, touched, setFieldValue, isValid, submitForm }) => (
         <Row>
@@ -90,7 +90,6 @@ const RegisterForm = () => {
               }}
             />
           </Col>
-
           <Col lg={8}>
             <Form>
               <FormElement

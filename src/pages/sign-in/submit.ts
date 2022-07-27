@@ -15,13 +15,14 @@ const onSubmit = (setToastSettings: any, updateUser: any) => async (
 
     const { accessToken } = tokenResponse
 
-    tokenService.saveToken(accessToken)
+    await tokenService.saveToken(accessToken)
 
     setToastSettings({
       text: "You're successfully logged in",
       show: true,
       className: 'bg-success',
     })
+
     updateUser()
   } catch (err) {
     if (err.response.data) {

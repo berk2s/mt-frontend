@@ -41,7 +41,7 @@ const experiences = [
 ];
 
 interface FilterDiscoveryForm {
-  location: number;
+  distance: number;
   age: number[];
   gyms: string[];
   genders: string[];
@@ -57,12 +57,10 @@ interface FilterDiscoverProps {
 const FilterDiscover = (props: FilterDiscoverProps) => {
   const { onSubmit } = props;
 
-  const [locationRange, setLocationRange] = useState(0);
-  const [ageRange, setAgeRange] = useState([18, 50]);
   const [gyms, setGyms] = useState<{ id: string; name: string }[]>([]);
 
   const initialValues: FilterDiscoveryForm = {
-    location: 0,
+    distance: 0,
     age: [18, 50],
     gyms: [],
     genders: [],
@@ -94,18 +92,18 @@ const FilterDiscover = (props: FilterDiscoverProps) => {
         <div className="filter-list-area">
           <div className="filter-area range-area">
             <div className="filter-label-area">
-              <span className="filter-label">Location</span>
+              <span className="filter-label">Distance</span>
             </div>
 
             <div className="filter-input-area filter-input-range padding-range">
               <Range
-                values={[values.location]}
+                values={[values.distance]}
                 step={10}
                 min={0}
                 max={100}
                 prefix={"km"}
                 onChange={(values) => {
-                  setFieldValue("location", values[0]);
+                  setFieldValue("distance", values[0]);
                 }}
               />
             </div>

@@ -19,7 +19,6 @@ const PremiumPackages = () => {
   }, []);
 
   const handleCheckoutClick = (foreginRef: string) => async () => {
-    console.log(foreginRef);
     const paymentLink = await subscriptionService.subscribe({
       foreginRef: foreginRef,
     });

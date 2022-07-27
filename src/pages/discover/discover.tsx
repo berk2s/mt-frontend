@@ -232,7 +232,7 @@ const Discover = () => {
 
   const onFilter = async (values: any, actions: any) => {
     const queryParams = {
-      location: values.location,
+      distance: values.distance,
       birthdayStart: values.age[0],
       birthdayEnd: values.age[1],
       gym: values.gyms,

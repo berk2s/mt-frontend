@@ -4,10 +4,12 @@ import { CreateAthleteRequest } from '../../../../services/types'
 import { userService } from '../../../../services/user/user.services'
 import convertError from '../../../../utility/error-utility'
 
-const onSubmit = (setToastSettings: any, updateUser: any) => async (
-  values: any,
-  actions: any,
-) => {
+const onSubmit = (
+  lat: number,
+  lng: number,
+  setToastSettings: any,
+  updateUser: any,
+) => async (values: any, actions: any) => {
   actions.setSubmitting(false)
 
   const birthday = new Date(
@@ -26,7 +28,10 @@ const onSubmit = (setToastSettings: any, updateUser: any) => async (
       trainingDays: values.trainingDays,
       trainingExperience: values.trainingExperience,
       languages: values.languages,
+      lat: lat ? lat : 0.0,
+      lng: lng ? lng : 0.0,
     }
+
     const tokenResponse = await createAccount.createAthlete(createAthleteReq)
 
     await tokenService.saveToken(tokenResponse.accessToken)

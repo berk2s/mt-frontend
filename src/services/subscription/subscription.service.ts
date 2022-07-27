@@ -8,7 +8,6 @@ export const subscriptionService = {
 async function subscribe(
   req: PaymentLinkRequest,
 ): Promise<PaymentLinkResponse> {
-  console.log(req)
   const paymentLink: PaymentLinkResponse = await clientJSON.post(
     'subscriptions/subscribe',
     JSON.stringify(req),

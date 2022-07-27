@@ -77,8 +77,8 @@ function App() {
     } else {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setLat(position.coords.latitude);
-          setLng(position.coords.longitude);
+          setLat(parseFloat(position.coords.latitude + "").toFixed(6));
+          setLng(parseFloat(position.coords.longitude + "").toFixed(6));
         },
         () => {
           console.log("Unable to get the location");
