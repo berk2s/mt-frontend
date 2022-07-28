@@ -22,6 +22,9 @@ import PremiumPackages from "./pages/premium-packages/premium";
 import SubscriptionSuccess from "./pages/success/subscription-success";
 import CreatePersonalTrainerAccount from "./pages/create-account/pages/create-pt/create-pt";
 import EditPTProfile from "./pages/edit-profile/pages/personal-trainer/edit-profile";
+import MyPackages from "./pages/my-packages/my-packages";
+import CreatePackage from "./pages/create-package/create-package";
+import EditPackage from "./pages/edit-package/edit-package";
 
 export const AppContext = createContext(null);
 
@@ -225,6 +228,32 @@ function App() {
               }
             />
 
+            <Route
+              path="my-packages"
+              element={
+                <ProtectedRoute canSee={["PT"]} redirectTo="/sign-in">
+                  <MyPackages />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="create-package"
+              element={
+                <ProtectedRoute canSee={["PT"]} redirectTo="/sign-in">
+                  <CreatePackage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="edit-package/:packageId"
+              element={
+                <ProtectedRoute canSee={["PT"]} redirectTo="/sign-in">
+                  <EditPackage />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="logout"
               element={

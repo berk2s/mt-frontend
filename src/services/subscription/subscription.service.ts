@@ -1,5 +1,9 @@
 import { clientJSON } from '../axios.services'
-import { PaymentLinkRequest, PaymentLinkResponse } from '../types'
+import {
+  PackageResponse,
+  PaymentLinkRequest,
+  PaymentLinkResponse,
+} from '../types'
 
 export const subscriptionService = {
   subscribe,

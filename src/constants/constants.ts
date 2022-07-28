@@ -44,4 +44,15 @@ const trainingDaysOptions = [
   },
 ]
 
-export { languageOptions, trainingDaysOptions }
+const workoutTypes = [
+  {
+    id: 'FULL BODY',
+    name: 'FULL BODY',
+  },
+  {
+    id: 'PARTIAL',
+    name: 'PARTIAL',
+  },
+]
+
+export { languageOptions, trainingDaysOptions, workoutTypes }

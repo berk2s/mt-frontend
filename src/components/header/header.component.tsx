@@ -90,7 +90,7 @@ const Header = () => {
   const renderPT = () => {
     return (
       <>
-        <Link to="/discover" className="nav-link">
+        <Link to="/my-packages" className="nav-link">
           My packages
         </Link>
 

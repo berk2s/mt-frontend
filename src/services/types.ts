@@ -191,3 +191,26 @@ export interface UpdatePTRequest extends UpdateUserRequest {
   yearsOfExperience: number
   deletedCerfImages: string[]
 }
+
+export interface PTPackageResponse extends PackageResponse {
+  workoutType: string[]
+  personalTrainer: string
+}
+
+export interface CreatePackageRequest {
+  packageName: string
+  packageDescription: string
+  unitAmonut: number
+  currency: string
+  subscriptionInterval: string
+  workoutType: string[]
+}
+
+export interface UpdatePackageRequest {
+  packageName: string
+  packageDescription: string
+  unitAmonut: number
+  currency: string
+  subscriptionInterval: string
+  workoutType: string[]
+}
