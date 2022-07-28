@@ -10,9 +10,11 @@ interface GuestRouteProps {
 const GuestRoute = (props: GuestRouteProps) => {
   const { children, redirectTo } = props;
   const user = tokenService.decode();
+  const token = tokenService.getToken();
 
-  if (user) {
-    return <Navigate to={redirectTo} replace />;
+  if (user && token != null) {
+    window.location.href = redirectTo;
+    return;
   }
 
   return children;

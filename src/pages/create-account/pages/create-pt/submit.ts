@@ -49,7 +49,9 @@ const onSubmit = (
         show: true,
         className: 'bg-success',
       })
-      updateUser()
+      setTimeout(() => {
+        updateUser()
+      }, 1000)
     }
   } catch (err) {
     if (err.response.data && err.response.data && err.response.data.details) {
