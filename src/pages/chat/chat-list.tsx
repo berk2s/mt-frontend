@@ -95,7 +95,7 @@ const ChatList = () => {
         <div className="no-message-area">
           <MessageIcon color={"#36AE7C"} width={36} height={36} />
           <span className="no-message-text">
-            You haven't matched with anybody yet
+            You haven't chatted with anybody yet
           </span>
         </div>
       ) : (

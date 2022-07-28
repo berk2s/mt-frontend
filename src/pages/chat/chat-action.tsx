@@ -44,7 +44,7 @@ const ChatAction = ({ matchingId, participantName }) => {
         }}
       >
         <div className="action-area mr-1" onClick={() => setShow(!show)}>
-          <span>UNMATCH</span>
+          <span>END CHAT</span>
         </div>
         <div className="action-area" onClick={() => setShow(!show)}>
           <span>REPORT</span>
@@ -56,12 +56,11 @@ const ChatAction = ({ matchingId, participantName }) => {
           <Modal.Title>Are you sure?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          If you remove the matching, you won't see <b>{participantName}</b> in
-          the discovery for a long time.
+          Do you want to end chat with <b>{participantName}</b>?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={unMatch}>
-            Unmatch
+            Yes
           </Button>
         </Modal.Footer>
       </Modal>
