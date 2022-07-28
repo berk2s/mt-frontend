@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Row, Col } from "react-bootstrap";
 import Stack from "react-bootstrap/Stack";
 import { useNavigate, useParams } from "react-router-dom";
 import Loader from "react-spinners/BounceLoader";
+import { AppContext } from "../../App";
 import apiConfig from "../../config/api.config";
 import useRestCallEffect from "../../hooks/useRestCallEffect";
 import { personalTrainerService } from "../../services/personal-trainer/personal-trainer.service";
@@ -14,6 +15,7 @@ import { capitalizeFirstLetter } from "../../utility/string-utility";
 const PTDetail = () => {
   const navigate = useNavigate();
   const { personalTrainerId } = useParams();
+  const { setToastSettings } = useContext(AppContext);
 
   const [isLoading, setIsLoading] = useState(true);
   const [pt, setPT] = useState<PTResponse>();
@@ -37,11 +39,21 @@ const PTDetail = () => {
   }, []);
 
   const handleBuyClick = (foreginRef: string) => async (e) => {
-    const paymentLink = await subscriptionService.subscribe({
-      foreginRef: foreginRef,
-    });
+    try {
+      const paymentLink = await subscriptionService.subscribe({
+        foreginRef: foreginRef,
+      });
 
-    window.location.replace(paymentLink.sessionUrl);
+      window.location.replace(paymentLink.sessionUrl);
+    } catch (err) {
+      if (err.response.data.error_description === "user.subscribedBefore") {
+        setToastSettings({
+          text: "You've already subscribed this package",
+          show: true,
+          className: "bg-warning",
+        });
+      }
+    }
   };
 
   return (
@@ -101,7 +113,10 @@ const PTDetail = () => {
         <Col lg={8}>
           <h5 style={{ fontSize: 16 }}>My Packages</h5>
 
-          <div className="package-list mt-3" style={{ gap: 20 }}>
+          <div
+            className="package-list mt-3"
+            style={{ gap: 20, marginBottom: 100 }}
+          >
             {packages.map((_package, index) => {
               return (
                 <section key={index}>
