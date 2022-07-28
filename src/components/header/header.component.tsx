@@ -88,7 +88,46 @@ const Header = () => {
   };
 
   const renderPT = () => {
-    return <></>;
+    return (
+      <>
+        <Link to="/discover" className="nav-link">
+          My packages
+        </Link>
+
+        <NavDropdown
+          title={`${user.fullName} ${
+            user.isPremium === true ? "(Premium)" : ""
+          }`}
+          id="basic-nav-dropdown"
+        >
+          <span className="dropdown-item">
+            <Link to="/pt-profile" className="nav-link dropdown-link">
+              Profile
+            </Link>
+          </span>
+
+          <span className="dropdown-item">
+            <Link to="/chat" className="nav-link dropdown-link">
+              Chat
+            </Link>
+          </span>
+
+          <span className="dropdown-item">
+            <Link to="/change-gym" className="nav-link dropdown-link">
+              Change GYM
+            </Link>
+          </span>
+
+          <NavDropdown.Divider />
+
+          <span className="dropdown-item">
+            <Link to="/logout" className="nav-link dropdown-link">
+              Logout
+            </Link>
+          </span>
+        </NavDropdown>
+      </>
+    );
   };
 
   return (

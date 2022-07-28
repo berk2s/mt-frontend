@@ -17,7 +17,7 @@ import {
 import { ageToBirthday, calculateAge } from "../../utility/date-utility";
 import { capitalizeFirstLetter } from "../../utility/string-utility";
 import "./discover.scss";
-import FilterDiscover from "./filter-dicover";
+import FilterDiscover from "./filter-discover";
 
 type InteractionStatus = "NORMAL" | "LIKED" | "DISLIKED" | "MATCHED";
 

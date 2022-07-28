@@ -20,6 +20,7 @@ import ChangeGym from "./pages/change-gym/change-gym";
 import ChatList from "./pages/chat/chat-list";
 import PremiumPackages from "./pages/premium-packages/premium";
 import SubscriptionSuccess from "./pages/success/subscription-success";
+import CreatePersonalTrainerAccount from "./pages/create-account/pages/create-pt/create-pt";
 
 export const AppContext = createContext(null);
 
@@ -143,13 +144,19 @@ function App() {
                 </GuestRoute>
               }
             />
+
+            <Route
+              path="create-account/personal-trainer"
+              element={
+                <GuestRoute redirectTo="/discover">
+                  <CreatePersonalTrainerAccount />
+                </GuestRoute>
+              }
+            />
             <Route
               path="discover"
               element={
-                <ProtectedRoute
-                  canSee={["PT", "ATHLETE"]}
-                  redirectTo="/sign-in"
-                >
+                <ProtectedRoute canSee={["ATHLETE"]} redirectTo="/sign-in">
                   <Discover />
                 </ProtectedRoute>
               }
@@ -166,7 +173,10 @@ function App() {
             <Route
               path="change-gym"
               element={
-                <ProtectedRoute canSee={["ATHLETE"]} redirectTo="/sign-in">
+                <ProtectedRoute
+                  canSee={["ATHLETE", "PT"]}
+                  redirectTo="/sign-in"
+                >
                   <ChangeGym />
                 </ProtectedRoute>
               }

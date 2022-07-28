@@ -11,11 +11,16 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = (props: ProtectedRouteProps) => {
   const { children, canSee, redirectTo } = props;
+
+  let _redirectTo = redirectTo;
+
   try {
     const user = tokenService.decode();
 
+    if (user.userType === "PT") _redirectTo = "/home";
+
     if (!user || canSee.filter((i) => i === user.userType).length == 0) {
-      return <Navigate to={redirectTo} replace />;
+      return <Navigate to={_redirectTo} replace />;
     }
 
     return children;

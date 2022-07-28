@@ -1,12 +1,12 @@
 import { createAccount } from '../../../../services/create-account/create-account.services'
+import { personalTrainerService } from '../../../../services/personal-trainer/personal-trainer.service'
 import { tokenService } from '../../../../services/token-service/token.services'
-import { CreateAthleteRequest } from '../../../../services/types'
+import { CreatePTRequest } from '../../../../services/types'
 import { userService } from '../../../../services/user/user.services'
 import convertError from '../../../../utility/error-utility'
 
 const onSubmit = (
-  lat: number,
-  lng: number,
+  cerfImages: any,
   setToastSettings: any,
   updateUser: any,
 ) => async (values: any, actions: any) => {
@@ -18,27 +18,30 @@ const onSubmit = (
     parseInt(values.birthdayDay),
   )
 
-  try {
-    const createAthleteReq: CreateAthleteRequest = {
-      fullName: values.fullName,
-      email: values.email,
-      password: values.password,
-      birthday: birthday,
-      gender: values.gender,
-      trainingDays: values.trainingDays,
-      trainingExperience: values.trainingExperience,
-      languages: values.languages,
-      lat: lat ? lat : 0.0,
-      lng: lng ? lng : 0.0,
-    }
+  const createPT: CreatePTRequest = {
+    fullName: values.fullName,
+    email: values.email,
+    password: values.password,
+    birthday: birthday,
+    gender: values.gender,
+    languages: values.languages,
+    iban: values.iban,
+    yearsOfExperience: parseInt(values.yearsOfExperience),
+    gym: values.gym,
+  }
 
-    const tokenResponse = await createAccount.createAthlete(createAthleteReq)
+  try {
+    const tokenResponse = await createAccount.createPersonalTrainer(createPT)
 
     await tokenService.saveToken(tokenResponse.accessToken)
 
     await userService.updateProfileImage({
       profileImage: values.profileImage,
     })
+
+    await personalTrainerService.uploadCertificates(
+      cerfImages.map((i) => i.file),
+    )
 
     if (tokenResponse && tokenResponse.accessToken && tokenResponse.expiresIn) {
       setToastSettings({

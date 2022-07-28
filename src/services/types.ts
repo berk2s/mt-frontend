@@ -172,3 +172,9 @@ export interface UpdateGeoLocationRequest {
   lat: number
   lng: number
 }
+
+export interface CreatePTRequest extends CreateBaseUser {
+  iban: string
+  gym: string
+  yearsOfExperience: number
+}
