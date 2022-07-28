@@ -47,7 +47,7 @@ const SignInForm = () => {
             showHelpClassName={"invalid-feedback"}
             helpText={errors.password}
             className="mb-3"
-            label="Email"
+            label="Password"
           >
             <Field
               type="password"

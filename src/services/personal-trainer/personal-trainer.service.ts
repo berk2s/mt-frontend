@@ -3,6 +3,7 @@ import { tokenService } from '../token-service/token.services'
 import {
   CreatePackageRequest,
   PTPackageResponse,
+  PTResponse,
   UpdatePackageRequest,
 } from '../types'
 
@@ -13,6 +14,9 @@ export const personalTrainerService = {
   getPTPackageById,
   updatePTPackage,
   deletePTPackage,
+  getAllPersonalTrainers,
+  getPTInfoById,
+  getPackagesByPersonalTrainerId,
 }
 
 async function uploadCertificates(images: any[]) {
@@ -79,4 +83,30 @@ async function deletePTPackage(packageId: string): Promise<PTPackageResponse> {
   )
 
   return Promise.resolve(packageRes)
+}
+
+async function getAllPersonalTrainers(): Promise<PTResponse[]> {
+  const personalTrainers: PTResponse[] = await clientJSON.get(
+    '/users/personal-trainers',
+  )
+
+  return Promise.resolve(personalTrainers)
+}
+
+async function getPTInfoById(ptId: string): Promise<PTResponse> {
+  const personalTrainer: PTResponse = await clientJSON.get(
+    `/users/personal-trainers/${ptId}`,
+  )
+
+  return Promise.resolve(personalTrainer)
+}
+
+async function getPackagesByPersonalTrainerId(
+  ptId: string,
+): Promise<PTPackageResponse[]> {
+  const packages: PTPackageResponse[] = await clientJSON.get(
+    `/users/personal-trainers/${ptId}/packages`,
+  )
+
+  return Promise.resolve(packages)
 }

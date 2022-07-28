@@ -11,7 +11,7 @@ const SubscriptionSuccess = () => {
         </div>
 
         <div className="mx-auto">
-          <h2>You are now premium!</h2>
+          <h2>Your payment was successful!</h2>
         </div>
       </Stack>
     </Stack>

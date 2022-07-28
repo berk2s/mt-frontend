@@ -40,7 +40,7 @@ const Header = () => {
           Discover Buddies
         </Link>
 
-        <Link to="/sign-in" className="nav-link">
+        <Link to="/personal-trainers" className="nav-link">
           Personal Trainers
         </Link>
 

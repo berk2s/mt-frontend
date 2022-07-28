@@ -25,6 +25,8 @@ import EditPTProfile from "./pages/edit-profile/pages/personal-trainer/edit-prof
 import MyPackages from "./pages/my-packages/my-packages";
 import CreatePackage from "./pages/create-package/create-package";
 import EditPackage from "./pages/edit-package/edit-package";
+import PersonalTrainers from "./pages/personal-trainers/personal-trainers";
+import PTDetail from "./pages/personal-trainers/detail";
 
 export const AppContext = createContext(null);
 
@@ -251,6 +253,24 @@ function App() {
               element={
                 <ProtectedRoute canSee={["PT"]} redirectTo="/sign-in">
                   <EditPackage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="personal-trainers"
+              element={
+                <ProtectedRoute canSee={["ATHLETE"]} redirectTo="/sign-in">
+                  <PersonalTrainers />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="personal-trainers/:personalTrainerId"
+              element={
+                <ProtectedRoute canSee={["ATHLETE"]} redirectTo="/sign-in">
+                  <PTDetail />
                 </ProtectedRoute>
               }
             />
