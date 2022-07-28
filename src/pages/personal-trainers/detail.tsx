@@ -73,40 +73,78 @@ const PTDetail = () => {
       <Row>
         <Col lg={4}>
           {!isLoading && (
-            <div
-              className=""
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                justifyContent: "space-between",
-                gap: 32,
-              }}
-              key={pt.id}
-              onClick={() => navigate(`/personal-trainers/${pt.id}`)}
-            >
-              <div className="person-card mx-auto">
-                <img
-                  src={`${apiConfig.imageUrl}/${pt.imageUrl}`}
-                  className="person-img"
-                  // onClick={() => setShowDetails(!showDetails)}
-                />
+            <>
+              <div
+                className=""
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  justifyContent: "space-between",
+                  gap: 32,
+                }}
+                key={pt.id}
+                onClick={() => navigate(`/personal-trainers/${pt.id}`)}
+              >
+                <div className="person-card mx-auto">
+                  <img
+                    src={`${apiConfig.imageUrl}/${pt.imageUrl}`}
+                    className="person-img"
+                    // onClick={() => setShowDetails(!showDetails)}
+                  />
 
-                <div className={"person-meta"} style={{ maxHeight: 90 }}>
-                  <span className="person-name">
-                    {pt.fullName} • {calculateAge(new Date(pt.birthday))}
-                  </span>
-                  <span className="person-meta-info">
-                    {pt.yearsOfExperience} years experience
-                  </span>
-                  <span className="person-meta-info">
-                    {pt.languages
-                      .map((i) => capitalizeFirstLetter(i))
-                      .join(", and ")}
-                  </span>
+                  <div className={"person-meta"} style={{ maxHeight: 90 }}>
+                    <span className="person-name">
+                      {pt.fullName} • {calculateAge(new Date(pt.birthday))}
+                    </span>
+                    <span className="person-meta-info">
+                      {pt.yearsOfExperience} years experience
+                    </span>
+                    <span className="person-meta-info">
+                      {pt.languages
+                        .map((i) => capitalizeFirstLetter(i))
+                        .join(", and ")}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
+
+              <div className="mt-4">
+                <h5 style={{ fontSize: 16 }}>My Certificates</h5>
+
+                <div className="mt-2">
+                  {pt.certificates.map((certificate, index) => {
+                    return (
+                      <div
+                        key={index}
+                        style={{
+                          width: "fit-content",
+                          padding: 20,
+                          gap: 16,
+                          cursor: "pointer",
+                          position: "relative",
+                        }}
+                        onClick={() => {
+                          window.open(
+                            `${apiConfig.imageUrl}/${certificate}`,
+                            "_blank",
+                            "noopener,noreferrer"
+                          );
+                        }}
+                      >
+                        <img
+                          src={`${apiConfig.imageUrl}/${certificate}`}
+                          style={{
+                            width: 130,
+                            height: 175,
+                          }}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
           )}
         </Col>
 
