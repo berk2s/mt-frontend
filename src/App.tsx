@@ -21,6 +21,7 @@ import ChatList from "./pages/chat/chat-list";
 import PremiumPackages from "./pages/premium-packages/premium";
 import SubscriptionSuccess from "./pages/success/subscription-success";
 import CreatePersonalTrainerAccount from "./pages/create-account/pages/create-pt/create-pt";
+import EditPTProfile from "./pages/edit-profile/pages/personal-trainer/edit-profile";
 
 export const AppContext = createContext(null);
 
@@ -166,6 +167,15 @@ function App() {
               element={
                 <ProtectedRoute canSee={["ATHLETE"]} redirectTo="/sign-in">
                   <EditProfile />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="pt-profile"
+              element={
+                <ProtectedRoute canSee={["PT"]} redirectTo="/sign-in">
+                  <EditPTProfile />
                 </ProtectedRoute>
               }
             />

@@ -178,3 +178,16 @@ export interface CreatePTRequest extends CreateBaseUser {
   gym: string
   yearsOfExperience: number
 }
+
+export interface PTResponse extends UserResponse {
+  yearsOfExperience: number
+  certificates: string[]
+  iban: string
+}
+
+export interface UpdatePTRequest extends UpdateUserRequest {
+  gym: string
+  iban: string
+  yearsOfExperience: number
+  deletedCerfImages: string[]
+}

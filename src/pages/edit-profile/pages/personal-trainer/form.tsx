@@ -1,23 +1,24 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Formik, Form, Field } from "formik";
-import RegisterFormSchema from "./validation";
-import Row from "react-bootstrap/esm/Row";
+import React, { useContext, useRef, useState } from "react";
+import useRestCallEffect from "../../../../hooks/useRestCallEffect";
+import { gymService } from "../../../../services/gym/gym.service";
+import { GymResponse } from "../../../../services/types";
+import { Formik, Field } from "formik";
 import BootstrapForm from "react-bootstrap/Form";
+import Row from "react-bootstrap/esm/Row";
 import Col from "react-bootstrap/esm/Col";
 import { Button } from "react-bootstrap";
 import FormElement from "../../../../components/form-element/form-element";
 import MultiSelect from "../../../../components/multi-select/multi-select";
 import { languageOptions } from "../../../../constants/constants";
-import useRestCallEffect from "../../../../hooks/useRestCallEffect";
-import { gymService } from "../../../../services/gym/gym.service";
-import { GymResponse } from "../../../../services/types";
+import UpdateProfileFormSchema from "./validation";
 import onSubmit from "./submit";
 import { AppContext } from "../../../../App";
+import { userService } from "../../../../services/user/user.services";
+import apiConfig from "../../../../config/api.config";
 
-interface RegisterFormValues {
+interface EditProfileFormValues {
   fullName: string;
   email: string;
-  password: string;
   birthdayDay: string;
   birthdayMonth: string;
   birthdayYear: string;
@@ -30,7 +31,7 @@ interface RegisterFormValues {
   yearsOfExperience: number;
 }
 
-const RegisterForm = () => {
+const EditPTProfileForm = () => {
   const { setToastSettings, updateUser } = useContext(AppContext);
 
   const fileInputRef = useRef(null);
@@ -40,11 +41,10 @@ const RegisterForm = () => {
   const [cerfImagePreviews, setCerfImagePreviews] = useState([]);
   const [cerfFiles, setCerfFiles] = useState([]);
   const [gyms, setGyms] = useState([]);
-
-  const initialValues: RegisterFormValues = {
+  const [deletedCerfs, setDeletedCerfs] = useState([]);
+  const [initialValues, setInitialValues] = useState({
     fullName: "",
     email: "",
-    password: "",
     birthdayDay: "",
     birthdayMonth: "",
     birthdayYear: "",
@@ -55,7 +55,52 @@ const RegisterForm = () => {
     gym: "",
     yearsOfExperience: 1,
     cerfImages: [],
-  };
+  });
+
+  useRestCallEffect(async () => {
+    const personalTrainer = await userService.getPTInfo();
+
+    const birthday = new Date(
+      personalTrainer.birthday ? personalTrainer.birthday : null
+    );
+
+    setInitialValues({
+      fullName: personalTrainer.fullName ? personalTrainer.fullName : "",
+      email: personalTrainer.email ? personalTrainer.email : "",
+      birthdayDay: birthday.getDate().toString(),
+      birthdayMonth: (birthday.getMonth() + 1).toString(),
+      birthdayYear: birthday.getFullYear().toString(),
+      gender: personalTrainer.gender ? personalTrainer.gender : "",
+      languages: personalTrainer.languages ? personalTrainer.languages : [],
+      profileImage: null,
+      cerfImages: [],
+      iban: personalTrainer.iban ? personalTrainer.iban : "",
+      yearsOfExperience: personalTrainer.yearsOfExperience
+        ? personalTrainer.yearsOfExperience
+        : 2,
+      gym: personalTrainer.gym ? personalTrainer.gym : "",
+    });
+
+    if (personalTrainer.imageUrl)
+      setImagePreview(`${apiConfig.imageUrl}/${personalTrainer.imageUrl}`);
+
+    if (personalTrainer.certificates) {
+      personalTrainer.certificates.forEach((img) => {
+        const id = Math.random();
+
+        setCerfFiles((data) => {
+          return [
+            ...data,
+            {
+              id: id,
+              file: null,
+              blob: `${apiConfig.imageUrl}/${img}`,
+            },
+          ];
+        });
+      });
+    }
+  }, []);
 
   useRestCallEffect(async () => {
     const gyms: GymResponse[] = await gymService.getGyms();
@@ -74,10 +119,12 @@ const RegisterForm = () => {
     certificateInputRef.current.click();
   };
 
-  const removeImage = (id: any) => (event: any) => {
+  const removeImage = (id: any, url: any) => (event: any) => {
     setCerfImagePreviews([...cerfImagePreviews.filter((i) => i !== id)]);
 
     setCerfFiles(cerfFiles.filter((i) => i.id !== id));
+
+    setDeletedCerfs([...deletedCerfs, url]);
 
     formikRef.current.setFieldValue(
       "cerfImages",
@@ -90,9 +137,9 @@ const RegisterForm = () => {
     <Formik
       innerRef={formikRef}
       initialValues={initialValues}
-      validationSchema={RegisterFormSchema}
+      validationSchema={UpdateProfileFormSchema}
       enableReinitialize={true}
-      onSubmit={onSubmit(cerfFiles, setToastSettings, updateUser)}
+      onSubmit={onSubmit(cerfFiles, deletedCerfs, setToastSettings, updateUser)}
     >
       {({ values, errors, touched, setFieldValue, isValid, submitForm }) => (
         <Row>
@@ -230,7 +277,7 @@ const RegisterForm = () => {
                             cursor: "pointer",
                             fontSize: 12,
                           }}
-                          onClick={removeImage(file.id)}
+                          onClick={removeImage(file.id, file.blob)}
                         >
                           x
                         </div>
@@ -326,22 +373,6 @@ const RegisterForm = () => {
             </FormElement>
 
             <FormElement
-              showHelp={!!(errors.password && touched.password)}
-              showHelpClassName={"invalid-feedback"}
-              helpText={errors.password}
-              className="mb-3"
-              label="Password"
-            >
-              <Field
-                type="password"
-                id="password"
-                name="password"
-                className="form-control custom-input"
-                placeholder="Password"
-              />
-            </FormElement>
-
-            <FormElement
               showHelp={!!(errors.gender && touched.gender)}
               showHelpClassName={"invalid-feedback"}
               helpText={errors.gender}
@@ -367,9 +398,13 @@ const RegisterForm = () => {
               className="mb-3"
               label="Languages"
             >
+              {initialValues.languages}
               <Field as="div" name="languages">
                 <MultiSelect
                   options={languageOptions}
+                  selectedValues={languageOptions.filter((i) =>
+                    initialValues.languages.includes(i.id)
+                  )}
                   onChange={(el) => {
                     setFieldValue(
                       "languages",
@@ -395,7 +430,11 @@ const RegisterForm = () => {
                 className="form-select custom-select"
               >
                 {gyms.map((gym) => {
-                  return <option value={gym.id}>{gym.name}</option>;
+                  return (
+                    <option key={gym.id} value={gym.id}>
+                      {gym.name}
+                    </option>
+                  );
                 })}
               </Field>
             </FormElement>
@@ -443,7 +482,7 @@ const RegisterForm = () => {
                 className="w-100"
                 disabled={!isValid}
               >
-                <span className="text-white">Sign Up</span>
+                <span className="text-white">Save</span>
               </Button>
             </div>
           </Col>
@@ -453,4 +492,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default EditPTProfileForm;

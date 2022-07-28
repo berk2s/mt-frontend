@@ -2,8 +2,10 @@ import { clientJSON, clientMultipart } from '../axios.services'
 import { tokenService } from '../token-service/token.services'
 import {
   AthleteResponse,
+  PTResponse,
   UpdateAthleteRequest,
   UpdateGeoLocationRequest,
+  UpdatePTRequest,
   UserResponse,
 } from '../types'
 import { UpdateProfileImage } from './user-services.types'
@@ -15,6 +17,8 @@ export const userService = {
   updateGymPreference,
   getUserInfo,
   updateLocation,
+  getPTInfo,
+  updatePTProfile,
 }
 
 async function updateProfileImage(
@@ -71,4 +75,19 @@ async function updateLocation(
   )
 
   return Promise.resolve(updateLocationRes)
+}
+
+async function getPTInfo(): Promise<PTResponse> {
+  const ptInfo: PTResponse = await clientJSON.get('/users/personal-trainers/me')
+
+  return Promise.resolve(ptInfo)
+}
+
+async function updatePTProfile(req: UpdatePTRequest): Promise<PTResponse> {
+  const updatedPT: PTResponse = await clientJSON.put(
+    '/users/personal-trainers',
+    JSON.stringify(req),
+  )
+
+  return Promise.resolve(updatedPT)
 }

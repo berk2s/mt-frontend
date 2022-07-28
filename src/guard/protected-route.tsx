@@ -17,7 +17,7 @@ const ProtectedRoute = (props: ProtectedRouteProps) => {
   try {
     const user = tokenService.decode();
 
-    if (user.userType === "PT") _redirectTo = "/home";
+    if (user.userType === "PT") _redirectTo = "/my-packages";
 
     if (!user || canSee.filter((i) => i === user.userType).length == 0) {
       return <Navigate to={_redirectTo} replace />;
