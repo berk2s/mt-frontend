@@ -1,0 +1,139 @@
+.person-card {
+    width: 300px;
+    height: 350px;
+    border: unset;
+    box-shadow: 0px 4px 8px rgb(97 97 97 / 14%), 0px 8px 16px rgb(97 97 97 / 14%);
+    cursor: pointer;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: 0.2s;
+}
+
+.interacted-card {
+    opacity: 0.6;
+}
+
+.person-img {
+    width: 100%;
+    height: 100%;
+    user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.person-meta {
+    width: 300px;
+    max-height: 70px;
+    display: flex;
+    flex-direction: column;
+    background-image: linear-gradient(0deg, rgb(0, 0, 0, 0.6) 1%, rgba(255, 255, 255, 0.00001) 100%);
+    position: absolute;
+    bottom: 0px;
+    padding: 12px 16px;
+    transition: 0.5s;
+    .person-name {
+        font-weight: 600;
+        color: white;
+        font-size: 16px;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-drag: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+    .person-meta-info {
+        font-weight: 400;
+        color: white;
+        font-size: 14px;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-drag: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        transition: 0.5s;
+    }
+}
+
+.card-loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+}
+
+.not-found-area {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    height: 100%;
+}
+
+.not-found-text {
+    font-weight: 600;
+    color: #003865;
+    font-size: 16px;
+    text-align: center;
+}
+
+.expand-athlete-details {
+    max-height: 135px;
+}
+
+.show-it {
+    opacity: 1;
+}
+
+.hide-it {
+    opacity: 0;
+}
+
+.discover-card-area {
+    position: relative;
+    .discover-card-alert-wrapper {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        .interacted-alert {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50px;
+            padding: 0 16px;
+            transform: rotate(307deg);
+            min-width: 110px;
+            border-radius: 12px;
+            .interacted-alert-text {
+                font-size: 18px;
+                font-weight: 700;
+            }
+        }
+        .matched-card {
+            background: rgba(165, 190, 204, 0.4);
+            border: 3px dashed #231955;
+            .interacted-alert-text {
+                color: #243a73;
+            }
+        }
+        .liked-card {
+            background: rgba(196, 223, 170, 0.7);
+            .interacted-alert-text {
+                color: #2b7a0b;
+            }
+        }
+        .disliked-card {
+            background: rgba(243, 120, 120, 0.7);
+            .interacted-alert-text {
+                color: #990000;
+            }
+        }
+    }
+}
